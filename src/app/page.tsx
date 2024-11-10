@@ -1,5 +1,4 @@
 import { GraphQLClient } from 'graphql-request';
-import Link from 'next/link';
 import React from 'react';
 import Card from "./components/card";
 
