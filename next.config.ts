@@ -7,6 +7,19 @@ const nextConfig: NextConfig = {
 export default nextConfig;
 module.exports = {
   images: {
-    domains: ['res.cloudinary.com'],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "*.welcomesoftware.com",
+      },
+      {
+        protocol: "https",
+        hostname: "*.optimizely.com",
+      },
+      {
+        protocol: "https",
+        hostname: "source.unsplash.com",
+      },
+    ],
   },
 };

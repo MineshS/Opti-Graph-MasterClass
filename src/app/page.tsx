@@ -4,19 +4,32 @@ import Card from "./components/card";
 
 const getLocations = async () => {
   const ograph = new GraphQLClient(
-    'https://flyby-router-demo.herokuapp.com/'
+    'https://cg.optimizely.com//content/v2?auth=2xllHlrkvZuNjhSDmxP4flhTozkgR2ZOmhxsnOWR1FsFHLaV'
   );
 
-  const { locations } = await ograph.request<{ locations: { id: string; name: string; description: string; photo: string; }[] }>(
-    `{
-        locations {
-          id
-          name
-          description
-          photo
+  const { City } = await ograph.request<{ City: { items: { _metadata: { displayName: string; key: string; }; IntroText: string; ImageUrl: { default: string; }; }[] } }>(
+    `query CityList($locale: [Locales] = en) {
+      City(locale: $locale, limit: 100) {
+        items {
+          _metadata {
+            displayName
+            key
+          }
+          IntroText
+          ImageUrl {
+            default
+          }
         }
+      }
     }`
   );
+
+  const locations = City.items.map(item => ({
+    id: item._metadata.key,
+    name: item._metadata.displayName,
+    description: item.IntroText,
+    photo: item.ImageUrl.default
+  }));
 
   return locations;
 };
@@ -24,7 +37,6 @@ const getLocations = async () => {
 
 export default async function Page() {
   const locations = await getLocations();
-  console.log(locations);
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-4xl font-bold mb-8 text-center">Locations</h1>
